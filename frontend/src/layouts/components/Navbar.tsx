@@ -53,46 +53,46 @@ export function Navbar({ className }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className={cn("sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60", className)}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-14 max-w-screen-2xl items-center">
+    <header className={cn("sticky top-0 z-50 w-full border-b border-gray-200/20 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/80", className)}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-16 max-w-screen-2xl items-center">
         {/* Logo */}
-        <div className="mr-4 flex">
-          <Link to="/" className="mr-6 flex items-center space-x-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded bg-primary">
-              <Home className="h-3 w-3 text-primary-foreground" />
+        <div className="mr-8 flex">
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-600 group-hover:bg-purple-700 transition-all duration-300 group-hover:scale-110">
+              <Home className="h-5 w-5 text-white" />
             </div>
-            <span className="hidden font-bold sm:inline-block">PromoEngine</span>
+            <span className="hidden font-black text-xl text-gray-900 sm:inline-block group-hover:text-purple-600 transition-colors duration-300">PromoEngine</span>
           </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <div className="w-full flex-1 md:w-auto md:flex-none">
-            <NavigationMenu className="hidden md:flex">
-              <NavigationMenuList>
-                {navItems.map((item) => (
-                  <NavigationMenuItem key={item.href}>
-                    <NavigationMenuLink asChild>
-                      <Link
-                        to={item.href}
-                        className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-                      >
-                        {item.icon && <item.icon className="mr-2 h-4 w-4" />}
-                        {item.title}
-                      </Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
+        <div className="flex flex-1 items-center justify-between">
+          <div className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                to={item.href}
+                className="group inline-flex h-10 items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 transition-all duration-300 hover:-translate-y-0.5"
+              >
+                {item.icon && <item.icon className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />}
+                {item.title}
+              </Link>
+            ))}
           </div>
 
           {/* Auth Buttons */}
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" asChild className="hidden md:inline-flex">
+          <div className="flex items-center space-x-3">
+            <Button 
+              variant="ghost" 
+              asChild 
+              className="hidden md:inline-flex text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 font-semibold transition-all duration-300 hover:-translate-y-0.5"
+            >
               <Link to="/login">Sign In</Link>
             </Button>
-            <Button asChild className="hidden md:inline-flex">
+            <Button 
+              asChild 
+              className="hidden md:inline-flex bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
+            >
               <Link to="/register">Get Started</Link>
             </Button>
 
@@ -101,44 +101,49 @@ export function Navbar({ className }: NavbarProps) {
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+                  className="md:hidden p-2 hover:bg-purple-50/80 rounded-xl transition-all duration-300 hover:-translate-y-0.5"
                 >
-                  <Menu className="h-5 w-5" />
+                  <Menu className="h-6 w-6 text-gray-700" />
                   <span className="sr-only">Toggle Menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="pr-0">
-                <div className="flex items-center space-x-2 pb-4">
-                  <div className="flex h-6 w-6 items-center justify-center rounded bg-primary">
-                    <Home className="h-3 w-3 text-primary-foreground" />
+              <SheetContent side="left" className="w-80 bg-white/95 backdrop-blur-xl border-r border-gray-200/20">
+                <div className="flex items-center space-x-3 pb-8 pt-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-600">
+                    <Home className="h-5 w-5 text-white" />
                   </div>
-                  <span className="font-bold">PromoEngine</span>
+                  <span className="font-black text-xl text-gray-900">PromoEngine</span>
                 </div>
-                <div className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
-                  <div className="flex flex-col space-y-3">
-                    {navItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        to={item.href}
-                        onClick={() => setIsOpen(false)}
-                        className="flex items-center space-x-2 text-sm font-medium transition-colors hover:text-foreground/80"
-                      >
-                        {item.icon && <item.icon className="h-4 w-4" />}
-                        <span>{item.title}</span>
+                <div className="flex flex-col space-y-2">
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center space-x-3 px-4 py-3 text-base font-semibold text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 rounded-xl transition-all duration-300 hover:-translate-y-0.5 group"
+                    >
+                      {item.icon && <item.icon className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />}
+                      <span>{item.title}</span>
+                    </Link>
+                  ))}
+                  <div className="flex flex-col space-y-3 pt-8 border-t border-gray-200/50 mt-6">
+                    <Button 
+                      variant="ghost" 
+                      asChild 
+                      className="justify-start h-12 text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 font-semibold transition-all duration-300 hover:-translate-y-0.5"
+                    >
+                      <Link to="/login" onClick={() => setIsOpen(false)}>
+                        Sign In
                       </Link>
-                    ))}
-                    <div className="flex flex-col space-y-2 pt-4">
-                      <Button variant="ghost" asChild className="justify-start">
-                        <Link to="/login" onClick={() => setIsOpen(false)}>
-                          Sign In
-                        </Link>
-                      </Button>
-                      <Button asChild className="justify-start">
-                        <Link to="/register" onClick={() => setIsOpen(false)}>
-                          Get Started
-                        </Link>
-                      </Button>
-                    </div>
+                    </Button>
+                    <Button 
+                      asChild 
+                      className="justify-start h-12 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
+                    >
+                      <Link to="/register" onClick={() => setIsOpen(false)}>
+                        Get Started
+                      </Link>
+                    </Button>
                   </div>
                 </div>
               </SheetContent>
