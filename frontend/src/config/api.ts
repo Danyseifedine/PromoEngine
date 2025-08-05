@@ -20,6 +20,9 @@ export const ENDPOINTS = {
         LOGOUT: '/auth/logout',
         // REFRESH: '/auth/refresh',
         // FORGOT_PASSWORD: '/auth/forgot-password', // Not implemented (NOT NEEDED FOR NOW)
+    },
+    ADMIN: {
+        STATS: '/admin/stats',
     }
 }
 

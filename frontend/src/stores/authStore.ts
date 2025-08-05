@@ -21,6 +21,9 @@ export const useAuthStore = create<AuthState>()(
                 try {
                     const response = await authService.login(credentials);
 
+                    // Store token in localStorage
+                    localStorage.setItem('token', response.data.token);
+
                     set({
                         user: response.data.user,
                         token: response.data.token,
@@ -31,7 +34,7 @@ export const useAuthStore = create<AuthState>()(
 
                     return response;
                 } catch (error: unknown) {
-                    const errorMessage = error instanceof Error && 'response' in error 
+                    const errorMessage = error instanceof Error && 'response' in error
                         ? (error as { response?: { data?: { message?: string } }; message?: string }).response?.data?.message || (error as Error).message || 'Login failed'
                         : 'Login failed';
                     set({
@@ -48,6 +51,9 @@ export const useAuthStore = create<AuthState>()(
                 try {
                     const response = await authService.register(userData);
 
+                    // Store token in localStorage
+                    localStorage.setItem('token', response.data.token);
+
                     set({
                         user: response.data.user,
                         token: response.data.token,
@@ -58,7 +64,7 @@ export const useAuthStore = create<AuthState>()(
 
                     return response;
                 } catch (error: unknown) {
-                    const errorMessage = error instanceof Error && 'response' in error 
+                    const errorMessage = error instanceof Error && 'response' in error
                         ? (error as { response?: { data?: { message?: string } }; message?: string }).response?.data?.message || (error as Error).message || 'Registration failed'
                         : 'Registration failed';
                     set({
@@ -82,6 +88,8 @@ export const useAuthStore = create<AuthState>()(
                     console.error('Logout API call failed:', error);
                 } finally {
                     // Always clear local state
+                    localStorage.removeItem('token');
+
                     set({
                         user: null,
                         token: null,
@@ -103,7 +111,7 @@ export const useAuthStore = create<AuthState>()(
                         error: null
                     });
                 } catch (error: unknown) {
-                    const errorMessage = error instanceof Error && 'response' in error 
+                    const errorMessage = error instanceof Error && 'response' in error
                         ? (error as { response?: { data?: { message?: string }; status?: number } }).response?.data?.message || 'Failed to get user data'
                         : 'Failed to get user data';
                     set({
