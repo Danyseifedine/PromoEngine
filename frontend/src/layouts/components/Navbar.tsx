@@ -1,21 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, Home, ShoppingBag, Info, Mail } from "lucide-react";
+import { Menu, Home, ShoppingBag, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/stores/authStore";
 
 interface NavItem {
   title: string;
   href: string;
   description?: string;
   icon?: React.ComponentType<{ className?: string }>;
+  requiresAuth?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -30,18 +26,13 @@ const navItems: NavItem[] = [
     href: "/shop",
     description: "Browse our products",
     icon: ShoppingBag,
+    requiresAuth: true,
   },
   {
     title: "About",
     href: "/about",
     description: "Learn more about us",
     icon: Info,
-  },
-  {
-    title: "Contact",
-    href: "/contact",
-    description: "Get in touch",
-    icon: Mail,
   },
 ];
 
@@ -51,6 +42,7 @@ interface NavbarProps {
 
 export function Navbar({ className }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated, logout, user, isLoading } = useAuthStore();
 
   return (
     <header className={cn("sticky top-0 z-50 w-full border-b border-gray-200/20 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/80", className)}>
@@ -68,33 +60,85 @@ export function Navbar({ className }: NavbarProps) {
         {/* Desktop Navigation */}
         <div className="flex flex-1 items-center justify-between">
           <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className="group inline-flex h-10 items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 transition-all duration-300 hover:-translate-y-0.5"
-              >
-                {item.icon && <item.icon className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />}
-                {item.title}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isShop = item.title === "Shop";
+              const isDisabled = item.requiresAuth && !isAuthenticated;
+              return (
+                <Link
+                  key={item.href}
+                  to={isDisabled ? "#" : item.href}
+                  tabIndex={isDisabled ? -1 : 0}
+                  aria-disabled={isDisabled}
+                  className={
+                    cn(
+                      "group inline-flex h-10 items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5",
+                      isDisabled
+                        ? "text-gray-400 cursor-not-allowed bg-gray-100"
+                        : "text-gray-700 hover:text-purple-600 hover:bg-purple-50/80"
+                    )
+                  }
+                  onClick={e => {
+                    if (isDisabled) e.preventDefault();
+                  }}
+                >
+                  {item.icon && <item.icon className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />}
+                  {item.title}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Auth Buttons */}
           <div className="flex items-center space-x-3">
-            <Button 
-              variant="ghost" 
-              asChild 
-              className="hidden md:inline-flex text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 font-semibold transition-all duration-300 hover:-translate-y-0.5"
-            >
-              <Link to="/login">Sign In</Link>
-            </Button>
-            <Button 
-              asChild 
-              className="hidden md:inline-flex bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
-            >
-              <Link to="/register">Get Started</Link>
-            </Button>
+            {isAuthenticated ? (
+              <Button
+                variant="ghost"
+                className="hidden md:inline-flex text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 font-semibold transition-all duration-300 hover:-translate-y-0.5"
+                onClick={logout}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <span className="flex items-center">
+                    <svg className="animate-spin h-4 w-4 mr-2 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                    Logging out...
+                  </span>
+                ) : (
+                  "Logout"
+                )}
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                asChild
+                className="hidden md:inline-flex text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 font-semibold transition-all duration-300 hover:-translate-y-0.5"
+              >
+                <Link to="/login">Sign In</Link>
+              </Button>
+            )}
+            {isAuthenticated && user?.type === "admin" && (
+              <Button
+                variant="ghost"
+                asChild
+                className="hidden md:inline-flex text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 font-semibold transition-all duration-300 hover:-translate-y-0.5"
+              >
+                <Link to="/dashboard">Dashboard</Link>
+              </Button>
+            )}
+            {isAuthenticated && user?.name ? (
+              <span className="hidden md:inline-flex items-center px-6 py-2 font-semibold text-gray-700">
+                Hello, {user.name}
+              </span>
+            ) : (
+              <Button
+                asChild
+                className="hidden md:inline-flex bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
+              >
+                <Link to="/register">Get Started</Link>
+              </Button>
+            )}
 
             {/* Mobile Menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -115,29 +159,48 @@ export function Navbar({ className }: NavbarProps) {
                   <span className="font-black text-xl text-gray-900">PromoEngine</span>
                 </div>
                 <div className="flex flex-col space-y-2">
-                  {navItems.map((item) => (
-                    <Link
-                      key={item.href}
-                      to={item.href}
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center space-x-3 px-4 py-3 text-base font-semibold text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 rounded-xl transition-all duration-300 hover:-translate-y-0.5 group"
-                    >
-                      {item.icon && <item.icon className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />}
-                      <span>{item.title}</span>
-                    </Link>
-                  ))}
+                  {navItems.map((item) => {
+                    const isShop = item.title === "Shop";
+                    const isDisabled = item.requiresAuth && !isAuthenticated;
+                    return (
+                      <Link
+                        key={item.href}
+                        to={isDisabled ? "#" : item.href}
+                        tabIndex={isDisabled ? -1 : 0}
+                        aria-disabled={isDisabled}
+                        onClick={e => {
+                          if (isDisabled) {
+                            e.preventDefault();
+                          } else {
+                            setIsOpen(false);
+                          }
+                        }}
+                        className={
+                          cn(
+                            "flex items-center space-x-3 px-4 py-3 text-base font-semibold rounded-xl transition-all duration-300 hover:-translate-y-0.5 group",
+                            isDisabled
+                              ? "text-gray-400 cursor-not-allowed bg-gray-100"
+                              : "text-gray-700 hover:text-purple-600 hover:bg-purple-50/80"
+                          )
+                        }
+                      >
+                        {item.icon && <item.icon className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />}
+                        <span>{item.title}</span>
+                      </Link>
+                    );
+                  })}
                   <div className="flex flex-col space-y-3 pt-8 border-t border-gray-200/50 mt-6">
-                    <Button 
-                      variant="ghost" 
-                      asChild 
+                    <Button
+                      variant="ghost"
+                      asChild
                       className="justify-start h-12 text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 font-semibold transition-all duration-300 hover:-translate-y-0.5"
                     >
                       <Link to="/login" onClick={() => setIsOpen(false)}>
                         Sign In
                       </Link>
                     </Button>
-                    <Button 
-                      asChild 
+                    <Button
+                      asChild
                       className="justify-start h-12 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
                     >
                       <Link to="/register" onClick={() => setIsOpen(false)}>

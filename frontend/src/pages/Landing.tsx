@@ -35,6 +35,12 @@ function Landing() {
             </p>
             
             <div className="mt-16 flex flex-col items-center justify-center gap-6">
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-12 py-6 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-purple-500/25 transform hover:-translate-y-1 hover:scale-[1.02] transition-all duration-500 group" asChild>
+                <Link to="/register">
+                  Start Free Trial
+                  <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
+                </Link>
+              </Button>
               
               <div className="flex flex-col sm:flex-row items-center gap-6 text-sm text-gray-500">
                 <div className="flex items-center">
@@ -243,7 +249,7 @@ function Landing() {
             
             {/* Refined CTA */}
             <div className="flex flex-col items-center gap-8 mb-20">
-              {/* <Button 
+              <Button 
                 size="lg" 
                 className="bg-purple-600 hover:bg-purple-700 text-white px-16 py-8 text-2xl font-bold rounded-full shadow-2xl hover:shadow-purple-500/30 hover:-translate-y-1 hover:scale-[1.02] transition-all duration-500 group border border-purple-500/50" 
                 asChild
@@ -253,7 +259,7 @@ function Landing() {
                   <ArrowRight className="ml-4 h-7 w-7 group-hover:translate-x-2 transition-transform duration-300" />
                 </Link>
               </Button>
-               */}
+              
               <div className="flex flex-col sm:flex-row items-center gap-8 text-gray-400">
                 <span className="flex items-center text-sm">
                   <span className="w-2 h-2 bg-emerald-400 rounded-full mr-2"></span>

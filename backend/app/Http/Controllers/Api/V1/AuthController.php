@@ -36,6 +36,8 @@ class AuthController extends Controller
                 'type' => 'customer',
             ]);
 
+            \Log::info('User created', ['user' => $user]);
+
             // If user is customer, create customer profile
             if ($user->type === 'customer') {
                 Customer::create([
@@ -44,6 +46,11 @@ class AuthController extends Controller
                     'city' => $request->city,
                 ]);
             }
+
+            \Log::info('Customer created', ['customer' => $user->customer]);
+
+            // Load the customer relationship
+            $user->load('customer');
 
             // Create token
             $token = $user->createToken('auth-token')->plainTextToken;
@@ -57,8 +64,8 @@ class AuthController extends Controller
                         'name' => $user->name,
                         'email' => $user->email,
                         'type' => $user->type,
-                        'loyalty_tier' => 'bronze',
-                        'city' => $user->customer->city,
+                        'loyalty_tier' => $user->customer?->loyalty_tier ?? 'bronze',
+                        'city' => $user->customer?->city ?? $request->city,
                     ],
                     'token' => $token,
                 ]
@@ -92,6 +99,9 @@ class AuthController extends Controller
                 ], Response::HTTP_UNAUTHORIZED);
             }
 
+            // Load the customer relationship
+            $user->load('customer');
+
             // Create new token
             $token = $user->createToken('auth-token')->plainTextToken;
 
@@ -104,8 +114,8 @@ class AuthController extends Controller
                         'name' => $user->name,
                         'email' => $user->email,
                         'type' => $user->type,
-                        'loyalty_tier' => $user->customer->loyalty_tier,
-                        'city' => $user->customer->city,
+                        'loyalty_tier' => $user->customer?->loyalty_tier ?? 'bronze',
+                        'city' => $user->customer?->city ?? null,
                     ],
                     'token' => $token,
                 ]
@@ -127,6 +137,9 @@ class AuthController extends Controller
         try {
             $user = $request->user();
 
+            // Load the customer relationship
+            $user->load('customer');
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -135,8 +148,8 @@ class AuthController extends Controller
                         'name' => $user->name,
                         'email' => $user->email,
                         'type' => $user->type,
-                        'loyalty_tier' => $user->customer->loyalty_tier,
-                        'city' => $user->customer->city,
+                        'loyalty_tier' => $user->customer?->loyalty_tier ?? 'bronze',
+                        'city' => $user->customer?->city ?? null,
                     ]
                 ]
             ]);

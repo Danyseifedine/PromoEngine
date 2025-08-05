@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 */
 
 // Public routes (no authentication required)
-Route::prefix('v1/auth')->group(function () {
+Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 });

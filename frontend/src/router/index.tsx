@@ -1,11 +1,10 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Landing from "@/pages/Landing";
+import Login from "@/pages/auth/Login";
+import Register from "@/pages/auth/Register";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
-
-const Dummy = () => {
-  return <div>Dummy</div>;
-};
+import About from "@/pages/About";
 
 export const router = createBrowserRouter([
   {
@@ -18,7 +17,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/about",
-    // element: <AboutPage />,
+    element: <About />,
   },
   {
     path: "/contact",
@@ -32,7 +31,7 @@ export const router = createBrowserRouter([
     path: "/login",
     element: (
       <PublicRoute>
-        <Dummy />
+        <Login />
       </PublicRoute>
     ),
   },
@@ -40,7 +39,7 @@ export const router = createBrowserRouter([
     path: "/register",
     element: (
       <PublicRoute>
-        <Dummy />
+        <Register />
       </PublicRoute>
     ),
   },
@@ -48,7 +47,7 @@ export const router = createBrowserRouter([
     path: "/dashboard",
     element: (
       <ProtectedRoute>
-        <Dummy />
+        <div className="flex items-center justify-center min-h-screen">Dashboard - Coming Soon</div>
       </ProtectedRoute>
     ),
   },

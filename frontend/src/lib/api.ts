@@ -35,9 +35,9 @@ apiClient.interceptors.response.use(
     (response: AxiosResponse) => response,
     (error: AxiosError) => {
         if (error.response?.status === 401) {
-            // Handle unauthorized - redirect to login
+            // Handle unauthorized - clear token but don't redirect
+            // Let the component handle the redirect
             localStorage.removeItem('token');
-            window.location.href = '/login';
         }
         return Promise.reject(error);
     }
