@@ -41,20 +41,11 @@ export default function EnginePage() {
                 </div>
 
                 {/* Rule Preview Section */}
-                <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="bg-white h-full rounded-lg shadow-sm border p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">
                         Rule Preview
                     </h2>
 
-                    {/* Generated Rule JSON */}
-                    {currentRule && (
-                        <div className="mb-6">
-                            <h3 className="text-md font-medium text-gray-700 mb-2">Generated Rule JSON:</h3>
-                            <pre className="bg-gray-100 p-4 rounded-lg text-sm overflow-auto max-h-48">
-                                {JSON.stringify(currentRule, null, 2)}
-                            </pre>
-                        </div>
-                    )}
                 </div>
             </div>
         </AdminLayout>
