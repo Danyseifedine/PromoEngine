@@ -40,6 +40,10 @@ const productSchema = z.object({
     required_error: "Unit price is required",
     invalid_type_error: "Unit price must be a number",
   }).min(0.01, "Unit price must be greater than 0").max(999999.99, "Unit price is too high"),
+  quantity: z.coerce.number({
+    required_error: "Quantity is required",
+    invalid_type_error: "Quantity must be a number",
+  }).min(0, "Quantity cannot be negative").max(999999, "Quantity is too high"),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -68,6 +72,7 @@ export function ProductEditModal({
       name: "",
       category_id: 0,
       unit_price: 0,
+      quantity: 0,
     },
   });
 
@@ -100,6 +105,7 @@ export function ProductEditModal({
           name: product.name,
           category_id: product.category_id,
           unit_price: typeof product.unit_price === 'string' ? parseFloat(product.unit_price) : product.unit_price,
+          quantity: product.quantity,
         };
         console.log('EditModal - setting form data:', formData);
         form.reset(formData);
@@ -109,6 +115,7 @@ export function ProductEditModal({
         name: "",
         category_id: 0,
         unit_price: 0,
+        quantity: 0,
       });
     }
   }, [product, form, isOpen]);
@@ -222,6 +229,34 @@ export function ProductEditModal({
                           const value = e.target.value;
                           console.log('Unit price changed to:', value);
                           field.onChange(value ? parseFloat(value) : 0);
+                        }}
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+
+            {/* Quantity Field */}
+            <FormField
+              control={form.control}
+              name="quantity"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Quantity</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="999999"
+                        placeholder="0"
+                        value={field.value ? field.value.toString() : ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value ? parseInt(value) : 0);
                         }}
                         disabled={isLoading}
                       />

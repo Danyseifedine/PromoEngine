@@ -19,7 +19,7 @@ class ProductController extends Controller
     {
         try {
             $query = Product::with('category');
-            
+
             // Apply search if provided
             if ($request->has('search') && !empty($request->search)) {
                 $searchTerm = $request->search;
@@ -30,11 +30,11 @@ class ProductController extends Controller
                       });
                 });
             }
-            
+
             // Get paginated results
             $products = $query->orderBy('created_at', 'desc')
                             ->paginate(10);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $products->items(),
@@ -64,7 +64,8 @@ class ProductController extends Controller
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
                 'category_id' => 'required|exists:categories,id',
-                'unit_price' => 'required|numeric|min:0'
+                'unit_price' => 'required|numeric|min:0',
+                'quantity' => 'required|integer|min:0'
             ]);
 
             $product = Product::create($validatedData);
@@ -125,7 +126,8 @@ class ProductController extends Controller
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
                 'category_id' => 'required|exists:categories,id',
-                'unit_price' => 'required|numeric|min:0'
+                'unit_price' => 'required|numeric|min:0',
+                'quantity' => 'required|integer|min:0'
             ]);
 
             $product->update($validatedData);
@@ -163,7 +165,7 @@ class ProductController extends Controller
         try {
             $product = Product::findOrFail($id);
             $productName = $product->name;
-            
+
             $product->delete();
 
             return response()->json([

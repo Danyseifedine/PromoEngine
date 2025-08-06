@@ -5,20 +5,16 @@ import {
   Package,
   Users,
   Tag,
-  BarChart3,
   Settings,
   ChevronDown,
   ChevronRight,
   Home,
   ShoppingBag,
   Percent,
-  PlusCircle,
-  List,
   UserCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useAuthStore } from "@/stores/authStore";
 
@@ -57,8 +53,8 @@ const sidebarItems: SidebarItem[] = [
     roles: ['admin'],
   },
   {
-    title: "Magic Engine",
-    href: "/admin/magic-engine",
+    title: "Engine",
+    href: "/admin/engine",
     icon: Settings,
     roles: ['admin'],
   },

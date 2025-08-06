@@ -10,6 +10,8 @@ import UsersPage from "@/pages/admin/UsersManagement";
 import CategoriesPage from "@/pages/admin/Categories";
 import ProductsPage from "@/pages/admin/Products";
 import PromotionsPage from "@/pages/admin/Promotions";
+import EnginePage from "@/pages/admin/Engine";
+import { RuleEngineTest } from "@/pages/admin/RuleEngineTest";
 
 // Custom AdminRoute to allow only admin users
 
@@ -84,6 +86,15 @@ export const router = createBrowserRouter([
       </AdminRoute>
     ),
   },
+  {
+    path: "/admin/engine",
+    element: (
+      <AdminRoute>
+        <EnginePage />
+      </AdminRoute>
+    ),
+  },
+
   // Catch all route - redirect to home
   {
     path: "*",

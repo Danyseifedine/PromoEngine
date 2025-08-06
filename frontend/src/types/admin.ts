@@ -43,6 +43,7 @@ export interface Product {
     name: string;
     category_id: number;
     unit_price: number;
+    quantity: number;
     created_at: string;
     updated_at: string;
     category?: Category;
@@ -52,6 +53,7 @@ export interface ProductFormData {
     name: string;
     category_id: number;
     unit_price: number;
+    quantity: number;
 }
 
 export interface ProductsManagement {

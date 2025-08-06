@@ -14,14 +14,16 @@ return new class extends Migration
         Schema::create('promotion_rules', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->integer('salience')->default(0);
+            $table->integer('salience')->default(10);
             $table->boolean('stackable')->default(true);
             $table->json('conditions');
             $table->json('actions');
+            $table->json('visual_data')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamp('valid_from')->nullable();
             $table->timestamp('valid_until')->nullable();
             $table->timestamps();
+
         });
     }
 

@@ -18,9 +18,8 @@ export const ENDPOINTS = {
         LOGIN: '/auth/login',
         REGISTER: '/auth/register',
         LOGOUT: '/auth/logout',
-        // REFRESH: '/auth/refresh',
-        // FORGOT_PASSWORD: '/auth/forgot-password', // Not implemented (NOT NEEDED FOR NOW)
     },
+    
     ADMIN: {
         STATS: '/admin/stats',
 
@@ -44,6 +43,10 @@ export const ENDPOINTS = {
             GET_ONE: '/admin/products/{id}',
             UPDATE: '/admin/products/{id}',
             DELETE: '/admin/products/{id}',
+        },
+
+        PROMOTION_RULES: {
+            CREATE: '/admin/promotion-rules',
         },
 
     }

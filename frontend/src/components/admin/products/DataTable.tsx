@@ -56,7 +56,7 @@ export function ProductsDataTable({
         }
     };
 
-    const handleUpdateProduct = async (id: string, data: { name: string; category_id: number; unit_price: number }) => {
+    const handleUpdateProduct = async (id: string, data: { name: string; category_id: number; unit_price: number; quantity: number }) => {
         try {
             await updateProduct(id, data);
             // Refresh the products list with current search
@@ -113,6 +113,18 @@ export function ProductsDataTable({
                     </div>
                 );
             },
+        },
+        {
+            key: "quantity",
+            header: "Quantity",
+            sortable: true,
+            render: (value) => (
+                <div className="text-left">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        {value} in stock
+                    </span>
+                </div>
+            ),
         },
         {
             key: "created_at",
