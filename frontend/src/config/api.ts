@@ -46,7 +46,9 @@ export const ENDPOINTS = {
         },
 
         PROMOTION_RULES: {
+            GET: '/admin/promotion-rules',
             CREATE: '/admin/promotion-rules',
+            DELETE: '/admin/promotion-rules/{id}',
         },
 
     }

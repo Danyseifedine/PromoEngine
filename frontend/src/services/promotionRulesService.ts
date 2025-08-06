@@ -43,3 +43,25 @@ export const promotionRulesService = {
         }
     },
 };
+
+// Additional service functions for store
+export const getPromotionRules = async (search?: string) => {
+    try {
+        const params = search ? { search } : {};
+        const response = await api.get(ENDPOINTS.ADMIN.PROMOTION_RULES.GET, { params });
+        return response.data;
+    } catch (error: any) {
+        console.error('Error fetching promotion rules:', error);
+        throw new Error(error.response?.data?.message || 'Failed to fetch promotion rules');
+    }
+};
+
+export const deletePromotionRule = async (id: string) => {
+    try {
+        const response = await api.delete(ENDPOINTS.ADMIN.PROMOTION_RULES.DELETE.replace('{id}', id));
+        return response.data;
+    } catch (error: any) {
+        console.error('Error deleting promotion rule:', error);
+        throw new Error(error.response?.data?.message || 'Failed to delete promotion rule');
+    }
+};

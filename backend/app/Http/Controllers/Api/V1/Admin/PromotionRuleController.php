@@ -13,6 +13,84 @@ use Illuminate\Support\Facades\DB;
 class PromotionRuleController extends Controller
 {
     /**
+     * Get all promotion rules.
+     */
+    public function index(Request $request): JsonResponse
+    {
+        try {
+            $search = $request->get('search');
+            
+            $query = PromotionRule::query();
+            
+            if ($search) {
+                $query->where('name', 'like', "%{$search}%");
+            }
+            
+            $promotionRules = $query->orderBy('created_at', 'desc')->get();
+            
+            return response()->json([
+                'success' => true,
+                'data' => $promotionRules,
+                'total' => $promotionRules->count()
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error fetching promotion rules', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch promotion rules',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete a promotion rule.
+     */
+    public function destroy(string $id): JsonResponse
+    {
+        try {
+            $promotionRule = PromotionRule::find($id);
+            
+            if (!$promotionRule) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Promotion rule not found'
+                ], 404);
+            }
+            
+            $promotionRule->delete();
+            
+            Log::info('Promotion Rule Deleted Successfully', [
+                'rule_id' => $id,
+                'rule_name' => $promotionRule->name
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Promotion rule deleted successfully'
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error deleting promotion rule', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'rule_id' => $id
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete promotion rule',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
+    }
+
+    /**
      * Store a newly created promotion rule in storage.
      */
     public function store(Request $request): JsonResponse

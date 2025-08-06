@@ -53,7 +53,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/products/{id}', [ProductController::class, 'deleteProduct']);
 
         // Promotion Rules routes
+        Route::get('/promotion-rules', [PromotionRuleController::class, 'index']);
         Route::post('/promotion-rules', [PromotionRuleController::class, 'store']);
+        Route::delete('/promotion-rules/{id}', [PromotionRuleController::class, 'destroy']);
     });
 });
 

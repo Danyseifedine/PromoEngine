@@ -35,18 +35,11 @@ export default function EnginePage() {
                         </p>
                     </div>
 
-                    <div className="h-96">
+                    <div className="h-[600px]">
                         <SimpleRuleEditor onRuleChange={handleRuleChange} />
                     </div>
                 </div>
 
-                {/* Rule Preview Section */}
-                <div className="bg-white h-full rounded-lg shadow-sm border p-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                        Rule Preview
-                    </h2>
-
-                </div>
             </div>
         </AdminLayout>
     );
