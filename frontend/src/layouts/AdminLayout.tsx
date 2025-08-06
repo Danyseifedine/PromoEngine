@@ -58,21 +58,15 @@ export function AdminLayout({
 
             {/* Header Content */}
             <div className="flex flex-1">
-              <Header 
-                title={title}
-                showSearch={true}
-                showNotifications={true}
-              />
+              <Header title={title} />
             </div>
           </div>
 
           {/* Page Content */}
           <main className="flex-1 overflow-y-auto focus:outline-none">
             <div className="relative">
-              <div className="py-6">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-                  {children}
-                </div>
+              <div className="py-6 px-6">
+                {children}
               </div>
             </div>
           </main>

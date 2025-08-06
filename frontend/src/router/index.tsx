@@ -6,6 +6,10 @@ import AdminDashboard from "@/pages/admin/Dashboard";
 import { PublicRoute } from "./middleware/GuestMiddleware";
 import About from "@/pages/About";
 import { AdminRoute } from "./middleware/AdminMiddleware";
+import UsersPage from "@/pages/admin/UsersManagement";
+import CategoriesPage from "@/pages/admin/Categories";
+import ProductsPage from "@/pages/admin/Products";
+import PromotionsPage from "@/pages/admin/Promotions";
 
 // Custom AdminRoute to allow only admin users
 
@@ -45,6 +49,38 @@ export const router = createBrowserRouter([
     element: (
       <AdminRoute>
         <AdminDashboard />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/users",
+    element: (
+      <AdminRoute>
+        <UsersPage />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/categories",
+    element: (
+      <AdminRoute>
+        <CategoriesPage />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/products",
+    element: (
+      <AdminRoute>
+        <ProductsPage />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/promotions",
+    element: (
+      <AdminRoute>
+        <PromotionsPage />
       </AdminRoute>
     ),
   },

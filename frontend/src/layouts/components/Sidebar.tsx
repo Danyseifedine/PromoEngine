@@ -40,60 +40,33 @@ const sidebarItems: SidebarItem[] = [
   },
   {
     title: "Products",
+    href: "/admin/products",
     icon: Package,
     roles: ['admin'],
-    children: [
-      {
-        title: "All Products",
-        href: "/products",
-        icon: List,
-        roles: ['admin'],
-      },
-      {
-        title: "Add Product",
-        href: "/products/create",
-        icon: PlusCircle,
-        roles: ['admin'],
-      },
-      {
-        title: "Categories",
-        href: "/categories",
-        icon: Tag,
-        roles: ['admin'],
-      },
-    ],
+  },
+  {
+    title: "Categories",
+    href: "/admin/categories",
+    icon: Tag,
+    roles: ['admin'],
   },
   {
     title: "Promotions",
+    href: "/admin/promotions",
     icon: Percent,
     roles: ['admin'],
-    children: [
-      {
-        title: "All Promotions",
-        href: "/promotions",
-        icon: List,
-        roles: ['admin'],
-      },
-      {
-        title: "Create Promotion",
-        href: "/promotions/create",
-        icon: PlusCircle,
-        roles: ['admin'],
-      },
-      {
-        title: "Rules Engine",
-        href: "/promotions/rules",
-        icon: Settings,
-        roles: ['admin'],
-      },
-    ],
   },
   {
-    title: "Customers",
-    href: "/customers",
+    title: "Magic Engine",
+    href: "/admin/magic-engine",
+    icon: Settings,
+    roles: ['admin'],
+  },
+  {
+    title: "Users",
+    href: "/admin/users",
     icon: Users,
     roles: ['admin'],
-    badge: "New",
   },
   {
     title: "Shop",
@@ -112,18 +85,6 @@ const sidebarItems: SidebarItem[] = [
     href: "/profile",
     icon: UserCircle,
     roles: ['customer'],
-  },
-  {
-    title: "Analytics",
-    href: "/analytics",
-    icon: BarChart3,
-    roles: ['admin'],
-  },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
-    roles: ['admin', 'customer'],
   },
 ];
 
@@ -247,17 +208,6 @@ export function Sidebar({ className }: SidebarProps) {
           </div>
         </div>
 
-        <Separator className="mx-3" />
-
-        {/* Additional actions or info */}
-        <div className="px-3">
-          <div className="rounded-lg bg-muted p-3">
-            <p className="text-sm font-medium">Pro Tip</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Use Ctrl+K to quickly search through your promotions and products.
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );

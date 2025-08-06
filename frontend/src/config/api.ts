@@ -23,6 +23,29 @@ export const ENDPOINTS = {
     },
     ADMIN: {
         STATS: '/admin/stats',
+
+        USERS: {
+            GET: '/admin/users',
+            DELETE: '/admin/users/{id}',
+            UPDATE: '/admin/users/{id}',
+        },
+
+        CATEGORIES: {
+            GET: '/admin/categories',
+            CREATE: '/admin/categories',
+            GET_ONE: '/admin/categories/{id}',
+            UPDATE: '/admin/categories/{id}',
+            DELETE: '/admin/categories/{id}',
+        },
+
+        PRODUCTS: {
+            GET: '/admin/products',
+            CREATE: '/admin/products',
+            GET_ONE: '/admin/products/{id}',
+            UPDATE: '/admin/products/{id}',
+            DELETE: '/admin/products/{id}',
+        },
+
     }
 }
 
