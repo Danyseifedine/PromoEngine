@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, Home, ShoppingBag, Info } from "lucide-react";
+import { Menu, Home, ShoppingBag, Info, ShoppingCart, User, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/authStore";
+import { useCartStore } from "@/stores/cartStore";
 
 interface NavItem {
   title: string;
@@ -43,6 +45,16 @@ interface NavbarProps {
 export function Navbar({ className }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { isAuthenticated, logout, user, isLoading } = useAuthStore();
+  const { cart, toggleCart, getCart } = useCartStore();
+
+  // Fetch cart when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      getCart();
+    }
+  }, [isAuthenticated, getCart]);
+
+  const cartItemCount = cart?.cart_items?.length || 0;
 
   return (
     <header className={cn("sticky top-0 z-50 w-full border-b border-gray-200/20 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/80", className)}>
@@ -90,25 +102,70 @@ export function Navbar({ className }: NavbarProps) {
 
           {/* Auth Buttons */}
           <div className="flex items-center space-x-3">
-            {isAuthenticated ? (
+            {/* Cart Icon - Only show when authenticated */}
+            {isAuthenticated && (
               <Button
                 variant="ghost"
-                className="hidden md:inline-flex text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 font-semibold transition-all duration-300 hover:-translate-y-0.5"
-                onClick={logout}
-                disabled={isLoading}
+                size="icon"
+                onClick={toggleCart}
+                className="relative hidden md:inline-flex text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 font-semibold transition-all duration-300 hover:-translate-y-0.5 h-10 w-10"
               >
-                {isLoading ? (
-                  <span className="flex items-center">
-                    <svg className="animate-spin h-4 w-4 mr-2 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                    </svg>
-                    Logging out...
+                <ShoppingCart className="h-5 w-5" />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 h-5 w-5 bg-purple-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                    {cartItemCount > 99 ? '99+' : cartItemCount}
                   </span>
-                ) : (
-                  "Logout"
                 )}
               </Button>
+            )}
+
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="relative hidden md:inline-flex text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 transition-all duration-300 hover:-translate-y-0.5 h-10 w-10"
+                  >
+                    <User className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{user?.name}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  {user?.type === "admin" && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/dashboard" className="cursor-pointer">
+                        <Settings className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={logout}
+                    disabled={isLoading}
+                    className="cursor-pointer text-red-600 focus:text-red-600"
+                  >
+                    {isLoading ? (
+                      <>
+                        <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-red-600 border-t-transparent" />
+                        Logging out...
+                      </>
+                    ) : (
+                      <>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                      </>
+                    )}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Button
                 variant="ghost"
@@ -118,20 +175,7 @@ export function Navbar({ className }: NavbarProps) {
                 <Link to="/login">Sign In</Link>
               </Button>
             )}
-            {isAuthenticated && user?.type === "admin" && (
-              <Button
-                variant="ghost"
-                asChild
-                className="hidden md:inline-flex text-gray-700 hover:text-purple-600 hover:bg-purple-50/80 font-semibold transition-all duration-300 hover:-translate-y-0.5"
-              >
-                <Link to="/dashboard">Dashboard</Link>
-              </Button>
-            )}
-            {isAuthenticated && user?.name ? (
-              <span className="hidden md:inline-flex items-center px-6 py-2 font-semibold text-gray-700">
-                Hello, {user.name}
-              </span>
-            ) : (
+            {!isAuthenticated && (
               <Button
                 asChild
                 className="hidden md:inline-flex bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"

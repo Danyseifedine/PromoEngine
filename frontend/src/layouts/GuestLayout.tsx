@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
+import { CartSidebar } from "@/components/cart/CartSidebar";
 
 interface GuestLayoutProps {
   children: ReactNode;
@@ -30,6 +31,9 @@ export function GuestLayout({
           showCompanyInfo={true}
         />
       )}
+      
+      {/* Cart Sidebar */}
+      <CartSidebar />
     </div>
   );
 }

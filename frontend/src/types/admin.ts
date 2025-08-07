@@ -65,3 +65,29 @@ export interface ProductsManagement {
         total: number;
     };
 }
+
+export interface CartItem {
+    id: number;
+    cart_id: number;
+    product_id: number;
+    quantity: number;
+    unit_price: number;
+    created_at: string;
+    updated_at: string;
+    product?: Product;
+    total?: number;
+}
+
+export interface Cart {
+    id: number;
+    user_id: number;
+    created_at: string;
+    updated_at: string;
+    cart_items: CartItem[];
+}
+
+export interface CartResponse {
+    success: boolean;
+    data: Cart;
+    total_amount: number;
+}

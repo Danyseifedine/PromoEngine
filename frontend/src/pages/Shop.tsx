@@ -1,6 +1,7 @@
 
 import { useProductManagementStore } from "@/stores/productManagementStore";
 import { useCategoryManagementStore } from "@/stores/categoryManagementStore";
+import { useCartStore } from "@/stores/cartStore";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types/admin";
@@ -10,8 +11,10 @@ import { GuestLayout } from "@/layouts/GuestLayout";
 export default function ShopPage() {
     const { products, isLoading: productsLoading, error: productsError, getProducts } = useProductManagementStore();
     const { categories: categoriesData, getCategories } = useCategoryManagementStore();
+    const { addToCart, isLoading: cartLoading, openCart } = useCartStore();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
+    const [addingToCart, setAddingToCart] = useState<Set<number>>(new Set());
 
     // Fetch products and categories on component mount
     useEffect(() => {
@@ -19,9 +22,24 @@ export default function ShopPage() {
         getCategories();
     }, [getProducts, getCategories]);
 
-    const handleAddToCart = (product: Product) => {
-        // TODO: Add to cart functionality
-        console.log('Add to cart:', product);
+    const handleAddToCart = async (product: Product) => {
+        if (product.quantity === 0) return;
+        
+        setAddingToCart(prev => new Set(prev).add(product.id));
+        try {
+            await addToCart(product.id, 1);
+            // Optionally show a toast notification or open cart
+            // openCart(); // Uncomment to auto-open cart after adding
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            // Handle error (could show a toast notification)
+        } finally {
+            setAddingToCart(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(product.id);
+                return newSet;
+            });
+        }
     };
 
     const filteredProducts = products?.data?.filter((product) => {
@@ -165,15 +183,24 @@ export default function ShopPage() {
                                             {/* Add to Cart Button */}
                                             <Button
                                                 onClick={() => handleAddToCart(product)}
-                                                disabled={product.quantity === 0}
+                                                disabled={product.quantity === 0 || addingToCart.has(product.id)}
                                                 className={`w-full flex items-center justify-center gap-2 ${
                                                     product.quantity > 0 
                                                         ? 'bg-purple-600 hover:bg-purple-700' 
                                                         : 'bg-gray-400 cursor-not-allowed'
                                                 }`}
                                             >
-                                                <ShoppingCart className="h-4 w-4" />
-                                                {product.quantity > 0 ? 'Add to Cart' : 'Sold Out'}
+                                                {addingToCart.has(product.id) ? (
+                                                    <>
+                                                        <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                                        Adding...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <ShoppingCart className="h-4 w-4" />
+                                                        {product.quantity > 0 ? 'Add to Cart' : 'Sold Out'}
+                                                    </>
+                                                )}
                                             </Button>
                                         </div>
                                     </div>

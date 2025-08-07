@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Customer;
 use App\Models\Product;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -23,6 +24,20 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@admin.com',
             'type' => 'admin',
             'password' => Hash::make('password'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'User',
+            'email' => 'user@user.com',
+            'type' => 'customer',
+            'password' => Hash::make('password'),
+        ]);
+
+        Customer::create([
+            'user_id' => 2,
+            'loyalty_tier' => 'bronze',
+            'orders_count' => 0,
+            'city' => 'Riyadh',
         ]);
 
         // Create categories
