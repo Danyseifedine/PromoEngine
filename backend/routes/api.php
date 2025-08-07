@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Admin\UserController;
 use App\Http\Controllers\Api\V1\Admin\CategoryController;
 use App\Http\Controllers\Api\V1\Admin\ProductController;
 use App\Http\Controllers\Api\V1\Admin\PromotionRuleController;
+use App\Http\Controllers\Api\V1\CartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
 
@@ -56,6 +57,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/promotion-rules', [PromotionRuleController::class, 'index']);
         Route::post('/promotion-rules', [PromotionRuleController::class, 'store']);
         Route::delete('/promotion-rules/{id}', [PromotionRuleController::class, 'destroy']);
+    });
+
+    // Cart routes
+    Route::prefix('cart')->group(function () {
+        Route::get('/', [CartController::class, 'index']);
+        Route::post('/add', [CartController::class, 'addItem']);
+        Route::put('/items/{cartItemId}', [CartController::class, 'updateItem']);
+        Route::delete('/items/{cartItemId}', [CartController::class, 'removeItem']);
+        Route::delete('/clear', [CartController::class, 'clear']);
     });
 });
 

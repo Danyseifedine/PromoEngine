@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Customer;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,11 @@ class AuthController extends Controller
             }
 
             \Log::info('Customer created', ['customer' => $user->customer]);
+
+            // Create cart for the user
+            Cart::create([
+                'user_id' => $user->id,
+            ]);
 
             // Load the customer relationship
             $user->load('customer');
