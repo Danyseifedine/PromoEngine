@@ -91,3 +91,27 @@ export interface CartResponse {
     data: Cart;
     total_amount: number;
 }
+
+export interface FreeItem {
+    productId: number;
+    productName: string;
+    freeQuantity: number;
+    unitPrice: string;
+    totalValue: number;
+    reason: string;
+}
+
+export interface AppliedRule {
+    ruleId: number;
+    ruleName: string;
+    discount: number;
+    freeUnits: FreeItem[];
+}
+
+export interface EvaluationResponse {
+    applied: AppliedRule[];
+    totalDiscount: number;
+    originalTotal: number;
+    finalTotal: number;
+    freeItems: FreeItem[];
+}
