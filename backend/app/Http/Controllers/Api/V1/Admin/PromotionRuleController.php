@@ -19,27 +19,26 @@ class PromotionRuleController extends Controller
     {
         try {
             $search = $request->get('search');
-            
+
             $query = PromotionRule::query();
-            
+
             if ($search) {
                 $query->where('name', 'like', "%{$search}%");
             }
-            
+
             $promotionRules = $query->orderBy('created_at', 'desc')->get();
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $promotionRules,
                 'total' => $promotionRules->count()
             ]);
-            
         } catch (\Exception $e) {
             Log::error('Error fetching promotion rules', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch promotion rules',
@@ -55,33 +54,32 @@ class PromotionRuleController extends Controller
     {
         try {
             $promotionRule = PromotionRule::find($id);
-            
+
             if (!$promotionRule) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Promotion rule not found'
                 ], 404);
             }
-            
+
             $promotionRule->delete();
-            
+
             Log::info('Promotion Rule Deleted Successfully', [
                 'rule_id' => $id,
                 'rule_name' => $promotionRule->name
             ]);
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Promotion rule deleted successfully'
             ]);
-            
         } catch (\Exception $e) {
             Log::error('Error deleting promotion rule', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'rule_id' => $id
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete promotion rule',
@@ -116,18 +114,25 @@ class PromotionRuleController extends Controller
             $transformedData = $this->transformVisualRuleToDatabase($request->all());
 
             // Create the promotion rule
+            $validFrom = $request->input('valid_from') ? \Carbon\Carbon::parse($request->input('valid_from')) : null;
+            $now = \Carbon\Carbon::now();
+
+            // If valid_from is in the future, force active to false
+            $active = $request->input('active', true);
+            if ($validFrom && $validFrom->isFuture()) {
+                $active = false;
+            }
+
             $promotionRule = PromotionRule::create([
                 'name' => $request->input('name'),
                 'salience' => $request->input('salience', 10),
                 'stackable' => $request->input('stackable', true),
-                'active' => $request->input('active', true),
-                'valid_from' => $request->input('valid_from') ?
-                    \Carbon\Carbon::parse($request->input('valid_from')) : null,
+                'active' => $active,
+                'valid_from' => $validFrom,
                 'valid_until' => $request->input('valid_until') ?
                     \Carbon\Carbon::parse($request->input('valid_until')) : null,
                 'conditions' => $transformedData['conditions'],
                 'actions' => $transformedData['actions'],
-                // Store original visual data for editing
                 'visual_data' => json_encode([
                     'conditions' => $request->input('conditions', []),
                     'actions' => $request->input('actions', []),

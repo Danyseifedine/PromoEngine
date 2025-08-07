@@ -2,6 +2,7 @@ import { useCartStore } from "@/stores/cartStore";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { ShoppingCart, Plus, Minus, Trash2, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
 export function CartSidebar() {
@@ -183,17 +184,20 @@ export function CartSidebar() {
                             {/* Action Buttons */}
                             <div className="space-y-2">
                                 <Button 
+                                    asChild
                                     className="w-full bg-purple-600 hover:bg-purple-700"
                                     disabled={isLoading}
                                 >
-                                    {isLoading ? (
-                                        <div className="flex items-center">
-                                            <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                                            Processing...
-                                        </div>
-                                    ) : (
-                                        "Proceed to Checkout"
-                                    )}
+                                    <Link to="/checkout">
+                                        {isLoading ? (
+                                            <div className="flex items-center">
+                                                <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                                                Processing...
+                                            </div>
+                                        ) : (
+                                            "Proceed to Checkout"
+                                        )}
+                                    </Link>
                                 </Button>
                                 <Button 
                                     variant="outline" 

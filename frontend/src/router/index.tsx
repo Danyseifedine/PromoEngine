@@ -12,6 +12,7 @@ import ProductsPage from "@/pages/admin/Products";
 import PromotionsPage from "@/pages/admin/Promotions";
 import EnginePage from "@/pages/admin/Engine";
 import ShopPage from "@/pages/Shop";
+import CheckoutPage from "@/pages/Checkout";
 import { ProtectedRoute } from "./middleware/AuthMiddleware";
 
 // Custom AdminRoute to allow only admin users
@@ -27,6 +28,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ShopPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/checkout",
+    element: (
+      <ProtectedRoute>
+        <CheckoutPage />
       </ProtectedRoute>
     ),
   },
