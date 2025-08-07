@@ -75,7 +75,7 @@ class CartController extends Controller
 
             if ($cartItem) {
                 $newQuantity = $cartItem->quantity + $request->quantity;
-                
+
                 // Check total quantity against stock
                 if ($product->quantity < $newQuantity) {
                     return response()->json([

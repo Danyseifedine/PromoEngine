@@ -7,29 +7,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CartItem extends Model
 {
-    protected $fillable = [
-        'cart_id',
-        'product_id',
-        'quantity',
-        'unit_price'
-    ];
+    protected $fillable = ['cart_id', 'product_id', 'quantity', 'unit_price'];
 
-    protected $casts = [
-        'unit_price' => 'decimal:2'
-    ];
-
-    public function cart(): BelongsTo
+    public function cart()
     {
         return $this->belongsTo(Cart::class);
     }
 
-    public function product(): BelongsTo
+    public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
-    public function getTotalAttribute()
+    public function getLineTotal()
     {
-        return $this->quantity * $this->unit_price;
+        return $this->quantity * $this->product->unit_price;
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\EvaluationController;
 use App\Http\Controllers\Api\V1\Admin\AdminController;
 use App\Http\Controllers\Api\V1\Admin\UserController;
 use App\Http\Controllers\Api\V1\Admin\CategoryController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Api\V1\Admin\PromotionRuleController;
 use App\Http\Controllers\Api\V1\CartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +69,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/items/{cartItemId}', [CartController::class, 'removeItem']);
         Route::delete('/clear', [CartController::class, 'clear']);
     });
+
+    // Evaluation routes
+    Route::post('/evaluate', [EvaluationController::class, 'evaluate']);
 });
 
 // Test route to verify API is working

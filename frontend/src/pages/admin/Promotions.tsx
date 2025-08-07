@@ -103,7 +103,7 @@ export default function PromotionsPage() {
                                     <p className="text-gray-500 mb-6">
                                         Get started by creating your first promotion rule
                                     </p>
-                                    <Link to="/admin/engine">
+                                    <Link to="/admin/engine" className="flex items-center justify-center">
                                         <Button className="flex items-center space-x-2">
                                             <Plus className="h-4 w-4" />
                                             <span>Create Your First Rule</span>
